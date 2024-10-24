@@ -3,12 +3,12 @@ package payment;
 import java.util.Scanner;
 import receipt.PrintReceipt;
 
-public class paymentCard implements PaymentMethod {
+public class paymentSamsung implements PaymentMethod {
     // 결제된 금액을 인스턴스 변수로 가정
     private double paymentAmount;
 
     // 생성자를 통해 결제 금액을 초기화
-    public paymentCard(double paymentAmount) {
+    public paymentSamsung (double paymentAmount) {
         this.paymentAmount = paymentAmount;
     }
 
@@ -17,12 +17,12 @@ public class paymentCard implements PaymentMethod {
         Scanner sc = new Scanner(System.in);
 
         int pointChoice;
+
         do {
             // 포인트 적립 여부 확인
             System.out.println("포인트를 적립하시겠습니까?");
             System.out.println("1. 네");
             System.out.println("2. 아니오");
-
             pointChoice = sc.nextInt();
 
             if (pointChoice == 1) {
@@ -36,12 +36,12 @@ public class paymentCard implements PaymentMethod {
             }
         } while (pointChoice != 1 && pointChoice != 2);
 
-        // 결제 완료 메시지
-        System.out.println("카드로 결제가 완료되었습니다.");
-
         int receiptChoice;
 
         do {
+            // 결제 완료 메시지
+            System.out.println("삼성페이로 결제가 완료되었습니다.");
+
             // 영수증 출력 여부 확인
             System.out.println("영수증을 출력하시겠습니까?");
             System.out.println("1. 네");
