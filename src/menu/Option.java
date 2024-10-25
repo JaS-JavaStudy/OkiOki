@@ -30,7 +30,7 @@ public class Option {
             Option option = entry.getValue();
             System.out.println(entry.getKey() + ". " + option.getOptionName() + "(+" + option.getOptionPrice() + "원)");
         }
-        System.out.println("\n==============================");
+        System.out.println("=====================================");
     }
 
     // 선택한 옵션 반환
