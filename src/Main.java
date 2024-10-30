@@ -1,47 +1,118 @@
+import menu.Menu;
+import menu.Option;
+import menu.Temperature;
+import java.util.*;
+
 public class Main {
     public static void main(String[] args) {
-        // 모든 사용자 입력 값은 유효성 검사를 하도록 구현할 것
-        // 각 단계에서 입력 값의 유효성을 체크하는 로직 추가 필요
-
+        Scanner scanner = new Scanner(System.in);
+        // 장바구니에 넘겨줄 orderInfo
+        Map<String, Object> orderInfo = new HashMap<>();
         System.out.println("=== 오키오키 커피 주문 키오스크 ===");
 
-        // 각 기능 클래스의 인스턴스를 생성
-        /*
-        ex)
-        MenuSelect menuSelect = new MenuSelect();
-        SizeSelect sizeSelect = new SizeSelect();
-        OptionSelect optionSelect = new OptionSelect();
-        ...
-         */
+        while (true) {
+            // 1. 메뉴 선택
+            Menu.displayMenu();
+            int menuChoice = -1;
+            Menu selectedMenu = null;
 
-        // 1. 로그인
+            // 유효한 메뉴 선택이 될 때까지 반복
+            while (selectedMenu == null) {
+                System.out.println("메뉴를 선택해 주세요:");
+                try {
+                    menuChoice = Integer.parseInt(scanner.nextLine());
+                    selectedMenu = Menu.getMenu(menuChoice);
+                    if (selectedMenu == null) {
+                        System.out.println("잘못된 메뉴 선택입니다. 다시 선택해 주세요.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("숫자를 입력해야 합니다. 다시 선택해 주세요.");
+                }
+            }
 
-        // while 문
-        /*
-            // 2. 메뉴 선택
-            // menuSelect.displayMenu();
+            // 기본 메뉴 정보 저장
+            orderInfo.put("menu", selectedMenu.getMenuName());
 
-            // 3. 사이즈 선택
-            // sizeSelect.selectSize();
+            // 2. 온도 선택
+            int tempChoice;
 
-            // 4. 옵션 선택 => 장바구니에 추가
+            // 아이스 ONLY 메뉴 선택 시
+            if (selectedMenu.isIceOnly()) {
+                tempChoice = 1;
+                System.out.println(selectedMenu.getMenuName() + "는 ICE ONLY입니다.");
+            } else {
+                // 유효한 온도 선택이 될 때까지 반복
+                while (true) {
+                    Temperature.displayTemperature();
+                    System.out.println("선택해 주세요 (0: HOT, 1: ICE):");
+                    try {
+                        tempChoice = Integer.parseInt(scanner.nextLine());
+                        if (Temperature.isValidTemperature(tempChoice)) {
+                            System.out.println(Temperature.getTemperatureName(tempChoice) + "으로 선택되었습니다.");
+                            break;
+                        } else {
+                            System.out.println("0 또는 1 중에 선택해 주세요.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("숫자를 입력해야 합니다. 다시 선택해 주세요.");
+                    }
+                }
+            }
 
-            // 추가로 메뉴를 선택할지 여부 묻기
-            System.out.println("주문을 계속 하시겠습니까? (Y/N) : ");
-            ...
+            // 온도 정보 저장 (0이면 hot, 1이면 ice)
+            orderInfo.put("temperature", tempChoice);
 
-            // 5. 장바구니 (확인, 수정, 삭제)
-            // 사용자가 장바구니를 확인하고 필요한 작업 수행
-         */
+            // 3. 옵션 선택
+            Map<String, Integer> selectedOptions = new HashMap<>();
+            int optionChoice = -1;
+            while (optionChoice != 0) {
+                Option.displayOptions();  // 옵션 목록 출력
+                System.out.println("옵션을 선택하세요. (종료: 0)");
+                try {
+                    optionChoice = Integer.parseInt(scanner.nextLine());
+                    if (optionChoice != 0) {
+                        Option selectedOption = Option.getOption(optionChoice);
+                        if (selectedOption != null) {
+                            selectedOptions.put(selectedOption.getOptionName(), selectedOption.getOptionPrice());
+                            selectedMenu.addOption(selectedOption);
+                            System.out.println("추가된 옵션: " + selectedOption.getOptionName() + " (+" + selectedOption.getOptionPrice() + "원)");
+                            System.out.println("현재 총 가격: " + selectedMenu.getTotalPrice() + "원");
+                        } else {
+                            System.out.println("잘못된 옵션 선택입니다. 다시 선택해 주세요.");
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("숫자를 입력해야 합니다. 다시 선택해 주세요.");
+                }
+            }
 
-        // 6. 쿠폰 or 포인트 사용 여부 확인
+            // 옵션 정보와 가격 저장
+            orderInfo.put("options", selectedOptions);
+            orderInfo.put("price", selectedMenu.getTotalPrice());
 
-        // 7. 결제
-        // 결제 수단 선택 및 결제 처리
+            // 주문 정보 출력 (테스트용)
+            System.out.println("\n=== 선택하신 주문 정보 ===");
+            System.out.println("메뉴: " + orderInfo.get("menu"));
+            System.out.println("HOT/ICE: " + orderInfo.get("temperature"));
+            System.out.println("선택된 옵션: " + orderInfo.get("options"));
+            System.out.println("총 가격: " + orderInfo.get("price"));
 
-        // 8. 포인트 적립
-        // 결제 후 포인트 적립 여부 확인
+            // 추가 주문 여부 확인
+            boolean validInput = false;
+            while (!validInput) {
+                System.out.println("\n추가 주문하시겠습니까? (Y/N)");
+                String continueOrder = scanner.nextLine().trim().toUpperCase();
 
-        System.out.println("이용해 주셔서 감사합니다!");
+                if (continueOrder.equals("Y")) {
+                    validInput = true;
+                    // 추가 주문을 위해 while 루프 계속
+                } else if (continueOrder.equals("N")) {
+                    validInput = true;
+                    return; // 프로그램 종료
+                } else {
+                    System.out.println("Y 또는 N만 입력 가능합니다. 다시 선택해 주세요.");
+                }
+            }
+        }
     }
 }
