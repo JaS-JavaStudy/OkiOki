@@ -1,14 +1,22 @@
+import account.Account;
+import account.Login;
+import cart.temp_bucket01;
 import menu.Menu;
 import menu.Option;
 import menu.Temperature;
+
+import java.io.IOException;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         // 장바구니에 넘겨줄 orderInfo
         Map<String, Object> orderInfo = new HashMap<>();
         System.out.println("=== 오키오키 커피 주문 키오스크 ===");
+        temp_bucket01 new_cart = new temp_bucket01(); // 맨위에 import cart.temp_bucket01;
+
+        Account user1 = Login.Login();
 
         while (true) {
             // 1. 메뉴 선택
@@ -97,16 +105,23 @@ public class Main {
             System.out.println("선택된 옵션: " + orderInfo.get("options"));
             System.out.println("총 가격: " + orderInfo.get("price"));
 
+
+            new_cart.add_order(orderInfo); // 카트에 담기
             // 추가 주문 여부 확인
             boolean validInput = false;
             while (!validInput) {
                 System.out.println("\n추가 주문하시겠습니까? (Y/N)");
                 String continueOrder = scanner.nextLine().trim().toUpperCase();
 
+
                 if (continueOrder.equals("Y")) {
                     validInput = true;
                     // 추가 주문을 위해 while 루프 계속
                 } else if (continueOrder.equals("N")) {
+                    System.out.println("start show!");
+                    new_cart.display_bucket();
+                    System.out.println("end show!");
+
                     validInput = true;
                     return; // 프로그램 종료
                 } else {
