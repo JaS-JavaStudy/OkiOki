@@ -24,4 +24,7 @@ public class temp_bucket01 {
             System.out.println("-----");
         }
     }
+    public ArrayList<Map<String, Object>> getCart() {
+        return cart;
+    }
 }
