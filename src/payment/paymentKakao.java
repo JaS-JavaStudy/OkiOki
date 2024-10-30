@@ -21,6 +21,7 @@ public class paymentKakao implements PaymentMethod {
         int pointChoice;
         double points = 0;
         do {
+            System.out.println();
             System.out.println("포인트를 적립하시겠습니까?");
             System.out.println("1. 네");
             System.out.println("2. 아니오");
@@ -29,6 +30,7 @@ public class paymentKakao implements PaymentMethod {
 
             if (pointChoice == 1) {
                 points = paymentAmount * 0.05;
+                System.out.println();
                 System.out.printf("포인트가 %.0f 포인트 적립되었습니다.\n", points);
             } else if (pointChoice == 2) {
                 System.out.println("포인트 적립을 선택하지 않았습니다.");

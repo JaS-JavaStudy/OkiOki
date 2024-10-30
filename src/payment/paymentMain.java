@@ -32,6 +32,7 @@ public class paymentMain {
         int choice;
 
         do {
+            System.out.println();
             System.out.println("결제 방법을 선택해 주세요!");
             System.out.println("1. 카드");
             System.out.println("2. 삼성페이");
