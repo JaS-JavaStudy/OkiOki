@@ -51,6 +51,7 @@ public class paymentMain {
                     paymentMethod = new paymentKakao(orderDetailsList);
                     break;
                 default:
+                    System.out.println();
                     System.out.println("잘못된 선택입니다. 다시 선택하세요.");
             }
         } while (paymentMethod == null); // 유효한 선택이 될 때까지 반복
