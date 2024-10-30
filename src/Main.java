@@ -18,7 +18,8 @@ public class Main {
 
         Account user1 = Login.Login();
 
-        while (true) {
+        boolean is_ordering = true;
+        while (is_ordering) {
             // 1. 메뉴 선택
             Menu.displayMenu();
             int menuChoice = -1;
@@ -99,16 +100,13 @@ public class Main {
             orderInfo.put("price", selectedMenu.getTotalPrice());
 
             // 주문 정보 출력 (테스트용)
-            System.out.println("\n=== 선택하신 주문 정보 ===");
-            System.out.println("메뉴: " + orderInfo.get("menu"));
-            System.out.println("HOT/ICE: " + orderInfo.get("temperature"));
-            System.out.println("선택된 옵션: " + orderInfo.get("options"));
-            System.out.println("총 가격: " + orderInfo.get("price"));
+            new_cart.display_bucket();
 
 
             new_cart.add_order(orderInfo); // 카트에 담기
             // 추가 주문 여부 확인
             boolean validInput = false;
+
             while (!validInput) {
                 System.out.println("\n추가 주문하시겠습니까? (Y/N)");
                 String continueOrder = scanner.nextLine().trim().toUpperCase();
@@ -118,16 +116,20 @@ public class Main {
                     validInput = true;
                     // 추가 주문을 위해 while 루프 계속
                 } else if (continueOrder.equals("N")) {
+                    // 장바구니 조회
                     System.out.println("start show!");
                     new_cart.display_bucket();
                     System.out.println("end show!");
 
                     validInput = true;
-                    return; // 프로그램 종료
+                    is_ordering = false;
                 } else {
                     System.out.println("Y 또는 N만 입력 가능합니다. 다시 선택해 주세요.");
                 }
             }
         }
+        System.out.println("여기부터 계산 시작");
+        payment.temp_payment.temp_pay(new_cart.getCart());
+
     }
 }
