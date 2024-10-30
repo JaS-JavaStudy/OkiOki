@@ -112,7 +112,7 @@ public class Menu {
             }
 
             // 메뉴 정보 출력
-            System.out.printf("%2d. %-20s%,7d원\n", entry.getKey(), menu.getMenuName(), menu.getPrice());
+            System.out.printf("%2d. %-30s%,7d원\n", entry.getKey(), menu.getMenuName(), menu.getPrice());
         }
         System.out.println("\n========================================");
     }
