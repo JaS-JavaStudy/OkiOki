@@ -1,50 +1,33 @@
 package cart;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import order.OrderDetails;
+
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Bucket {
-    private ArrayList<String> cartItems = new ArrayList<>();
-    private BufferedReader reader;
+    private ArrayList<OrderDetails> cartItems = new ArrayList<>();
+    private Scanner reader;
 
-    public Bucket(BufferedReader reader) {
+    public Bucket(Scanner reader) {
         this.reader = reader;
     }
 
-    // 음료 추가 메서드
-    public void addToBucket(String item, Options options) {
-        StringBuilder cartEntry = new StringBuilder(item);
-        boolean[] selectedOptions = options.getSelectedOptionStatus();
-        String[] optionNames = options.getSelectedOptions();
-
-        cartEntry.append(" (");
-        for (int i = 0; i < selectedOptions.length; i++) {
-            if (selectedOptions[i]) {
-                cartEntry.append("+").append(optionNames[i]).append(" ");
-            }
-        }
-        cartEntry.append(")");
-
-        cartItems.add(cartEntry.toString());
-        System.out.println(item + " " + cartEntry.toString() + "가 장바구니에 추가되었습니다.");
+    // 주문 추가 메서드
+    public void addToBucket(OrderDetails order) {
+        cartItems.add(order);
+        System.out.println(order.getMenu() + "가 장바구니에 추가되었습니다.");
     }
 
-    // 현재 음료 상태 표시
-    public void displayCurrentItem(String item, Options options) {
-        StringBuilder currentItem = new StringBuilder(item);
-        boolean[] selectedOptions = options.getSelectedOptionStatus();
-        String[] optionNames = options.getSelectedOptions();
-
-        currentItem.append(" (");
-        for (int i = 0; i < selectedOptions.length; i++) {
-            if (selectedOptions[i]) {
-                currentItem.append("+").append(optionNames[i]).append(" ");
-            }
+    // 현재 주문 상태 표시
+    public void displayCurrentItem(OrderDetails order) {
+        System.out.println("메뉴: " + order.getMenu() + " (온도: " +
+                (order.getTemperature() == 0 ? "HOT" : "ICE") + ")");
+        System.out.println("옵션:");
+        for (String option : order.getOptions().keySet()) {
+            System.out.println("  - " + option);
         }
-        currentItem.append(")");
-
-        System.out.println("음료와 옵션: " + currentItem.toString());
+        System.out.println("총 가격: " + order.calculateTotalPrice() + "원");
     }
 
     // 장바구니 표시
@@ -56,59 +39,57 @@ public class Bucket {
 
         System.out.println("=== 🧺장바구니🧺 ===");
         for (int i = 0; i < cartItems.size(); i++) {
-            System.out.println((i + 1) + ". " + cartItems.get(i));
+            OrderDetails order = cartItems.get(i);
+            System.out.println((i + 1) + ". " + order.getMenu() + " (" +
+                    (order.getTemperature() == 0 ? "HOT" : "ICE") + ") - " +
+                    order.calculateTotalPrice() + "원");
         }
     }
 
     // 장바구니 항목 수정
-    public void modifyBucket() throws IOException {
+    public void modifyBucket() {
         displayBucket();
-
         if (cartItems.isEmpty()) return;
 
         System.out.print("수정할 음료의 번호를 입력하세요: ");
-        String input = reader.readLine().trim();
+        String input = reader.nextLine().trim();
         int itemNum;
 
         try {
             itemNum = Integer.parseInt(input);
+            if (itemNum > 0 && itemNum <= cartItems.size()) {
+                OrderDetails order = cartItems.get(itemNum - 1);
+                System.out.println(order.getMenu() + "가 선택되었습니다. 새 이름을 입력하세요:");
+                String newMenuName = reader.nextLine().trim();
+                // order 객체에 새로운 메뉴 이름 설정 (OrderDetails에 setMenu 메서드 필요)
+                System.out.println("장바구니 수정 성공");
+            } else {
+                System.out.println("잘못된 번호입니다.");
+            }
         } catch (NumberFormatException e) {
             System.out.println("잘못된 입력입니다.");
-            return;
-        }
-
-        if (itemNum > 0 && itemNum <= cartItems.size()) {
-            System.out.print("수정할 음료 이름을 입력하세요: ");
-            String newItem = reader.readLine().trim();
-            cartItems.set(itemNum - 1, newItem);
-            System.out.println("장바구니 수정 성공");
-        } else {
-            System.out.println("잘못된 번호입니다.");
         }
     }
 
     // 장바구니 항목 삭제
-    public void removeFromBucket() throws IOException {
+    public void removeFromBucket() {
         displayBucket();
-
         if (cartItems.isEmpty()) return;
 
         System.out.print("삭제할 음료 번호를 입력하세요: ");
-        String input = reader.readLine().trim();
+        String input = reader.nextLine().trim();
         int itemNum;
 
         try {
             itemNum = Integer.parseInt(input);
+            if (itemNum > 0 && itemNum <= cartItems.size()) {
+                cartItems.remove(itemNum - 1);
+                System.out.println("음료가 삭제되었습니다.");
+            } else {
+                System.out.println("잘못된 번호입니다.");
+            }
         } catch (NumberFormatException e) {
             System.out.println("잘못된 입력입니다.");
-            return;
-        }
-
-        if (itemNum > 0 && itemNum <= cartItems.size()) {
-            cartItems.remove(itemNum - 1);
-            System.out.println("음료가 삭제되었습니다.");
-        } else {
-            System.out.println("잘못된 번호입니다.");
         }
     }
 }

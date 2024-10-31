@@ -4,6 +4,7 @@ import cart.temp_bucket01;
 import menu.Menu;
 import menu.Option;
 import menu.Temperature;
+import payment.temp_payment;
 
 import java.io.IOException;
 import java.util.*;
@@ -11,21 +12,18 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
-        // 장바구니에 넘겨줄 orderInfo
         Map<String, Object> orderInfo = new HashMap<>();
         System.out.println("=== 오키오키 커피 주문 키오스크 ===");
-        temp_bucket01 new_cart = new temp_bucket01(); // 맨위에 import cart.temp_bucket01;
+        temp_bucket01 new_cart = new temp_bucket01();
 
         Account user1 = Login.Login();
 
         boolean is_ordering = true;
         while (is_ordering) {
-            // 1. 메뉴 선택
             Menu.displayMenu();
             int menuChoice = -1;
             Menu selectedMenu = null;
 
-            // 유효한 메뉴 선택이 될 때까지 반복
             while (selectedMenu == null) {
                 System.out.println("메뉴를 선택해 주세요:");
                 try {
@@ -39,18 +37,13 @@ public class Main {
                 }
             }
 
-            // 기본 메뉴 정보 저장
             orderInfo.put("menu", selectedMenu.getMenuName());
 
-            // 2. 온도 선택
             int tempChoice;
-
-            // 아이스 ONLY 메뉴 선택 시
             if (selectedMenu.isIceOnly()) {
                 tempChoice = 1;
                 System.out.println(selectedMenu.getMenuName() + "는 ICE ONLY입니다.");
             } else {
-                // 유효한 온도 선택이 될 때까지 반복
                 while (true) {
                     Temperature.displayTemperature();
                     System.out.println("선택해 주세요 (0: HOT, 1: ICE):");
@@ -67,15 +60,12 @@ public class Main {
                     }
                 }
             }
-
-            // 온도 정보 저장 (0이면 hot, 1이면 ice)
             orderInfo.put("temperature", tempChoice);
 
-            // 3. 옵션 선택
             Map<String, Integer> selectedOptions = new HashMap<>();
             int optionChoice = -1;
             while (optionChoice != 0) {
-                Option.displayOptions();  // 옵션 목록 출력
+                Option.displayOptions();
                 System.out.println("옵션을 선택하세요. (종료: 0)");
                 try {
                     optionChoice = Integer.parseInt(scanner.nextLine());
@@ -94,33 +84,50 @@ public class Main {
                     System.out.println("숫자를 입력해야 합니다. 다시 선택해 주세요.");
                 }
             }
-
-            // 옵션 정보와 가격 저장
             orderInfo.put("options", selectedOptions);
             orderInfo.put("price", selectedMenu.getTotalPrice());
 
-            // 주문 정보 출력 (테스트용)
+            new_cart.add_order(orderInfo);
             new_cart.display_bucket();
 
-
-            new_cart.add_order(orderInfo); // 카트에 담기
-            // 추가 주문 여부 확인
             boolean validInput = false;
-
             while (!validInput) {
                 System.out.println("\n추가 주문하시겠습니까? (Y/N)");
                 String continueOrder = scanner.nextLine().trim().toUpperCase();
 
-
                 if (continueOrder.equals("Y")) {
                     validInput = true;
-                    // 추가 주문을 위해 while 루프 계속
                 } else if (continueOrder.equals("N")) {
-                    // 장바구니 조회
-                    System.out.println("start show!");
-                    new_cart.display_bucket();
-                    System.out.println("end show!");
+                    boolean is_editing = true;
+                    while (is_editing) {
+                        System.out.println("\n장바구니 메뉴:");
+                        System.out.println("1. 장바구니 옵션 수정");
+                        System.out.println("2. 장바구니 음료 삭제");
+                        System.out.println("3. 옵션 삭제");
+                        System.out.println("4. 결제하기");
+                        System.out.print("선택하세요: ");
 
+                        int editChoice = Integer.parseInt(scanner.nextLine());
+                        switch (editChoice) {
+                            case 1:
+                                new_cart.modify_options();
+                                break;
+                            case 2:
+                                new_cart.delete_order();
+                                break;
+                            case 3:
+                                new_cart.delete_options();
+                                break;
+                            case 4:
+                                is_editing = false;
+                                break;
+                            default:
+                                System.out.println("잘못된 선택입니다.");
+                                break;
+                        }
+                    }
+                    new_cart.display_bucket();
+                    payment.temp_payment.temp_pay(new_cart.getCart());
                     validInput = true;
                     is_ordering = false;
                 } else {
@@ -128,8 +135,5 @@ public class Main {
                 }
             }
         }
-        System.out.println("여기부터 계산 시작");
-        payment.temp_payment.temp_pay(new_cart.getCart());
-
     }
 }
