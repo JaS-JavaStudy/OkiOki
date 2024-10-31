@@ -4,7 +4,7 @@ import cart.Bucket;
 import menu.Menu;
 import menu.Option;
 import menu.Temperature;
-import payment.temp_payment;
+import payment.paymentMain;
 
 import java.io.IOException;
 import java.util.*;
@@ -119,15 +119,15 @@ public class Main {
                                 new_cart.delete_options();
                                 break;
                             case 4:
-                                is_editing = false;
+                                is_editing = false; // 결제 메서드 호출
+                                paymentMain.processPayment(new_cart.getCart());
                                 break;
                             default:
                                 System.out.println("잘못된 선택입니다.");
                                 break;
                         }
                     }
-                    new_cart.display_bucket();
-                    payment.temp_payment.temp_pay(new_cart.getCart());
+//                    new_cart.display_bucket();
                     validInput = true;
                     is_ordering = false;
                 } else {

@@ -18,8 +18,8 @@ public class OrderDetails {
     public double calculateTotalPrice() {
         double totalPrice = price; // 기본 가격
         for (Object optionPrice : options.values()) {
-            if (optionPrice instanceof Double) {
-                totalPrice += (Double) optionPrice; // 옵션 가격을 추가
+            if (optionPrice instanceof Number) {
+                totalPrice += ((Number) optionPrice).doubleValue(); // Number로 처리하여 double로 변환
             }
         }
         return totalPrice; // 기본 가격 + 옵션 가격
