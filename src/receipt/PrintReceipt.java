@@ -12,6 +12,7 @@ public class PrintReceipt {
     }
 
     public void print() {
+        System.out.println();
         System.out.println("========영수증========");
         double totalOrderPrice = 0; // 총 결제 금액 초기화
 
