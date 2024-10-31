@@ -1,6 +1,6 @@
 import account.Account;
 import account.Login;
-import cart.temp_bucket01;
+import cart.Bucket;
 import menu.Menu;
 import menu.Option;
 import menu.Temperature;
@@ -14,7 +14,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Map<String, Object> orderInfo = new HashMap<>();
         System.out.println("=== 오키오키 커피 주문 키오스크 ===");
-        temp_bucket01 new_cart = new temp_bucket01();
+        Bucket new_cart = new Bucket();
 
         Account user1 = Login.Login();
 
