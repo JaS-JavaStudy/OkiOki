@@ -1,5 +1,6 @@
 package cart;
 
+import java.util.Map;
 import order.OrderDetails;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,16 @@ public class Bucket {
         this.scanner = new Scanner(System.in);
     }
 
+    public void viewCart() {
+        if (cart.isEmpty()) {
+            System.out.println("장바구니가 비어 있습니다.");
+            return;
+        }
+
+        System.out.println("===== 현재 장바구니 =====");
+        display_bucket();
+    }
+
     public void add_order(Map<String, Object> orderInfo) {
         // 디버깅을 위한 출력
         System.out.println("Debug - OrderInfo content:");
@@ -25,7 +36,6 @@ public class Bucket {
 
         Map<String, Object> newOrder = new HashMap<>();
 
-        // 각 필드를 명시적으로 변환하여 저장
         newOrder.put("menu", String.valueOf(orderInfo.get("menu")));
         newOrder.put("temperature", String.valueOf(orderInfo.get("temperature")));
         newOrder.put("price", ((Number) orderInfo.get("price")).doubleValue());
@@ -77,46 +87,6 @@ public class Bucket {
         }
     }
 
-    public void modify_options() {
-        display_bucket();
-        if (cart.isEmpty()) {
-            System.out.println("장바구니가 비어 있습니다.");
-            return;
-        }
-
-        System.out.print("옵션을 수정할 음료 번호를 입력하세요: ");
-        int orderIndex = scanner.nextInt() - 1;
-        scanner.nextLine(); // 개행 제거
-
-        if (orderIndex >= 0 && orderIndex < cart.size()) {
-            Map<String, Object> order = cart.get(orderIndex);
-            Map<String, Object> options = (Map<String, Object>) order.get("options");
-
-            System.out.print("수정할 옵션 이름을 입력하세요: ");
-            String optionName = scanner.nextLine();
-
-            if (options.containsKey(optionName)) {
-                System.out.print("새 옵션 값을 입력하세요: ");
-                String newOptionValue = scanner.nextLine();
-
-                try {
-                    // 숫자인 경우 Double로 저장
-                    double numericValue = Double.parseDouble(newOptionValue);
-                    options.put(optionName, numericValue);
-                } catch (NumberFormatException e) {
-                    // 숫자가 아닌 경우 문자열로 저장
-                    options.put(optionName, newOptionValue);
-                }
-
-                System.out.println("옵션이 수정되었습니다.");
-            } else {
-                System.out.println("해당 옵션이 없습니다.");
-            }
-        } else {
-            System.out.println("잘못된 번호입니다.");
-        }
-    }
-
     public void delete_options() {
         display_bucket();
         if (cart.isEmpty()) {
@@ -163,14 +133,11 @@ public class Bucket {
                 Map<String, Object> originalOptions = (Map<String, Object>) order.get("options");
                 Map<String, Object> convertedOptions = new HashMap<>();
 
-                // options의 각 값을 적절한 타입으로 변환
                 for (Map.Entry<String, Object> entry : originalOptions.entrySet()) {
                     Object value = entry.getValue();
                     if (value instanceof Integer) {
-                        // 정수값은 그대로 유지
                         convertedOptions.put(entry.getKey(), value);
                     } else {
-                        // 다른 값들은 String으로 변환
                         convertedOptions.put(entry.getKey(), String.valueOf(value));
                     }
                 }
@@ -179,7 +146,7 @@ public class Bucket {
                 orderDetailsList.add(orderDetails);
             } catch (Exception e) {
                 System.out.println("주문 처리 중 오류 발생: " + e.getMessage());
-                e.printStackTrace(); // 스택 트레이스 출력 추가
+                e.printStackTrace();
             }
         }
 

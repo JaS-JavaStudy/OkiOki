@@ -88,11 +88,11 @@ public class Main {
             orderInfo.put("price", selectedMenu.getTotalPrice());
 
             new_cart.add_order(orderInfo);
-            new_cart.display_bucket();
 
             boolean validInput = false;
             while (!validInput) {
                 System.out.println("\n추가 주문하시겠습니까? (Y/N)");
+                System.out.println("현재 장바구니 확인하시려면 'C'를 입력해 주세요.");
                 String continueOrder = scanner.nextLine().trim().toUpperCase();
 
                 if (continueOrder.equals("Y")) {
@@ -101,25 +101,21 @@ public class Main {
                     boolean is_editing = true;
                     while (is_editing) {
                         System.out.println("\n장바구니 메뉴:");
-                        System.out.println("1. 장바구니 옵션 수정");
-                        System.out.println("2. 장바구니 음료 삭제");
-                        System.out.println("3. 옵션 삭제");
-                        System.out.println("4. 결제하기");
+                        System.out.println("1. 장바구니 음료 삭제");
+                        System.out.println("2. 옵션 삭제");
+                        System.out.println("3. 결제하기");
                         System.out.print("선택하세요: ");
 
                         int editChoice = Integer.parseInt(scanner.nextLine());
                         switch (editChoice) {
                             case 1:
-                                new_cart.modify_options();
-                                break;
-                            case 2:
                                 new_cart.delete_order();
                                 break;
-                            case 3:
+                            case 2:
                                 new_cart.delete_options();
                                 break;
-                            case 4:
-                                is_editing = false; // 결제 메서드 호출
+                            case 3:
+                                is_editing = false;
                                 paymentMain.processPayment(new_cart.getCart());
                                 break;
                             default:
@@ -127,11 +123,12 @@ public class Main {
                                 break;
                         }
                     }
-//                    new_cart.display_bucket();
                     validInput = true;
                     is_ordering = false;
+                } else if (continueOrder.equals("C")) {
+                    new_cart.viewCart();
                 } else {
-                    System.out.println("Y 또는 N만 입력 가능합니다. 다시 선택해 주세요.");
+                    System.out.println("Y, N 또는 C만 입력 가능합니다. 다시 선택해 주세요.");
                 }
             }
         }
