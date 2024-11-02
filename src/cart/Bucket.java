@@ -1,12 +1,10 @@
 package cart;
 
-import java.util.Map;
+import java.util.*;
+
 import order.OrderDetails;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
-import java.util.Scanner;
 
 public class Bucket {
     private ArrayList<Map<String, Object>> cart;
@@ -95,8 +93,18 @@ public class Bucket {
         }
 
         System.out.print("옵션을 삭제할 음료 번호를 입력하세요: ");
-        int orderIndex = scanner.nextInt() - 1;
-        scanner.nextLine(); // 개행 제거
+        int orderIndex = -1;
+
+        while (true) {
+            try {
+                orderIndex = scanner.nextInt() - 1;
+                scanner.nextLine(); // 개행 제거
+                break; // exit loop if input is valid
+            } catch (InputMismatchException e) {
+                System.out.println("숫자를 입력해주세요.");
+                scanner.nextLine(); // clear invalid input
+            }
+        }
 
         if (orderIndex >= 0 && orderIndex < cart.size()) {
             Map<String, Object> order = cart.get(orderIndex);
