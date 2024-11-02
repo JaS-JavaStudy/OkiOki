@@ -12,8 +12,16 @@ public class Login {
         String name = br.readLine();
         System.out.println("ID입력: ");
         String userID = br.readLine();
-        System.out.println("반 선택: ");
-        int classroom = Integer.parseInt(br.readLine());
+        int classroom = 0;
+        while (true) {
+            System.out.println("반 선택: ");
+            try {
+                classroom = Integer.parseInt(br.readLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("숫자를 입력해주세요");
+            }
+        }
 
         Account user1 = new Account(name,userID,classroom);
 

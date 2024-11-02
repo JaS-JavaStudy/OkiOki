@@ -29,10 +29,10 @@ public class Bucket {
 
     public void add_order(Map<String, Object> orderInfo) {
         // 디버깅을 위한 출력
-        System.out.println("Debug - OrderInfo content:");
-        for (Map.Entry<String, Object> entry : orderInfo.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue() + " (Type: " + entry.getValue().getClass().getName() + ")");
-        }
+//        System.out.println("Debug - OrderInfo content:");
+//        for (Map.Entry<String, Object> entry : orderInfo.entrySet()) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue() + " (Type: " + entry.getValue().getClass().getName() + ")");
+//        }
 
         Map<String, Object> newOrder = new HashMap<>();
 

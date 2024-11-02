@@ -42,11 +42,11 @@ public class Main {
             int tempChoice;
             if (selectedMenu.isIceOnly()) {
                 tempChoice = 1;
-                System.out.println(selectedMenu.getMenuName() + "는 ICE ONLY입니다.");
+                System.out.println(selectedMenu.getMenuName() + "는 ☃️ICE ONLY입니다.");
             } else {
                 while (true) {
                     Temperature.displayTemperature();
-                    System.out.println("선택해 주세요 (0: HOT, 1: ICE):");
+                    System.out.println("선택해 주세요 (0: 🔥HOT, 1: ☃️ICE):");
                     try {
                         tempChoice = Integer.parseInt(scanner.nextLine());
                         if (Temperature.isValidTemperature(tempChoice)) {
@@ -84,6 +84,7 @@ public class Main {
                     System.out.println("숫자를 입력해야 합니다. 다시 선택해 주세요.");
                 }
             }
+
             orderInfo.put("options", selectedOptions);
             orderInfo.put("price", selectedMenu.getTotalPrice());
 
@@ -91,6 +92,7 @@ public class Main {
 
             boolean validInput = false;
             while (!validInput) {
+
                 System.out.println("\n추가 주문하시겠습니까? (Y/N)");
                 System.out.println("현재 장바구니 확인하시려면 'C'를 입력해 주세요.");
                 String continueOrder = scanner.nextLine().trim().toUpperCase();

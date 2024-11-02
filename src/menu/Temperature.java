@@ -5,7 +5,7 @@ public class Temperature {
 
     // 온도 선택지 출력
     public static void displayTemperature() {
-        System.out.println("\n[HOT / ICE]");
+        System.out.println("\n[🔥HOT / ☃️ICE]");
         for (int i = 0; i < NAMES.length; i++) {
             System.out.printf("(%d) %s%n", i, NAMES[i]);
         }
